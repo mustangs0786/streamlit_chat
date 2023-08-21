@@ -54,24 +54,24 @@ if Input_model == "Data Load":
             path = t[0].download()
             video = VideoFileClip(path)
             video.audio.write_audiofile("output.mp3")
-            src = "output.mp3"
-            dst = "test.wav"
+            # src = "output.mp3"
+            # dst = "test.wav"
 
-            sound = AudioSegment.from_mp3(src)
-            sound.export(dst, format="wav")
-            import torch
-            DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-            model = whisper.load_model("tiny.en").to(DEVICE)
-            transcription = model.transcribe(dst, language="en")
-            extracted_text = transcription['text']
-            # if st.sidebar.button('Click To Chat'):
-            complete_prompt = extracted_text + """ This marks the end of text provided,
-                            now you are best text explainer, use this above text to answer my below question :
-                            question is : """
+            # sound = AudioSegment.from_mp3(src)
+            # sound.export(dst, format="wav")
+            # import torch
+            # DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+            # model = whisper.load_model("tiny.en").to(DEVICE)
+            # transcription = model.transcribe(dst, language="en")
+            # extracted_text = transcription['text']
+            # # if st.sidebar.button('Click To Chat'):
+            # complete_prompt = extracted_text + """ This marks the end of text provided,
+            #                 now you are best text explainer, use this above text to answer my below question :
+            #                 question is : """
 
-            f = open("myfile.txt", "w")
-            f.write(complete_prompt)
-            f.close()
+            # f = open("myfile.txt", "w")
+            # f.write(complete_prompt)
+            # f.close()
             
 if Input_model == "Chat":
     f = open("myfile.txt", "r")
