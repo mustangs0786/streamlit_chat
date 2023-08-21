@@ -57,7 +57,7 @@ if Input_model == "Data Load":
             # src = "output.mp3"
             # dst = "test.wav"
 
-            # sound = AudioSegment.from_mp3(src)
+            sound = AudioSegment.from_mp3(video.audio.write_audiofile("output.mp3"))
             # sound.export(dst, format="wav")
             # import torch
             # DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
