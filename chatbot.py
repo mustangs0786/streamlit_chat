@@ -77,6 +77,12 @@ if Input_model == "Chat":
     f = open("myfile.txt", "r")
     f = f.read()
     st.text(f)
+    f = open("myfile.txt", "w")
+    f.write("hello")
+    f.close()
+    f = open("myfile.txt", "r")
+    f = f.read()
+    st.text(f)
     if  len(list(f))!=0:
         complete_prompt = str(f)
         chat_function(complete_prompt)
