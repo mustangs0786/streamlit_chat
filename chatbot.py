@@ -54,10 +54,10 @@ if Input_model == "Data Load":
             path = t[0].download()
             video = VideoFileClip(path)
             video.audio.write_audiofile("output.mp3")
-            # src = "output.mp3"
+            src = "output.mp3"
             # dst = "test.wav"
 
-            sound = AudioSegment.from_mp3(video.audio.write_audiofile("output.mp3"))
+            sound = AudioSegment.from_mp3(src)
             # sound.export(dst, format="wav")
             # import torch
             # DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
