@@ -19,21 +19,25 @@ def chat_function(complete_prompt):
         st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
     
     # for msg in st.session_state.messages:
-    #     st.chat_message(msg["role"]).write(msg["content"])
-    # st.text(st.session_state.messages)
-    # st.text(complete_prompt)
+    # st.chat_message(msg["role"]).write(msg["content"])
+
     if prompts := st.chat_input():
         if not openai_api_key:
             st.info("Please add your OpenAI API key to continue.")
             st.stop()
         # st.text(complete_prompt)
         prompt = complete_prompt + prompts
+        if ('video' in prompt) or ('Video' in prompt):
+            prompt = prompt.replace('video'," provied text ")
+            prompt = prompt.replace('Video'," provied text ")
         openai.api_key = openai_api_key
         st.session_state.messages.append({"role": "user", "content": prompt})
         st.chat_message("user").write(prompts)
         response = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=st.session_state.messages)
         msg = response.choices[0].message
         st.session_state.messages.append(msg)
+        if ('text' in msg.content):
+            msg.content = msg.content.replace('text',"video")
         st.chat_message("assistant").write(msg.content)
     # if st.sidebar.button("clear chat"):
     #     st.session_state.messages.clear()
@@ -42,7 +46,7 @@ def chat_function(complete_prompt):
 
 
 st.title("_Welcome to your own 💬Chatbot_ :sunglasses:")
-Input_model = st.sidebar.selectbox("Slect the source of information", ("Data Load","Chat"))
+Input_model = st.sidebar.selectbox("Slect the source of information", ("select dropdown","Data Load","Chat"))
 # complete_prompt = ""
 if Input_model == "Data Load":
     source_input = st.selectbox("Select the source of information", ("Video","PDF","Document"))
@@ -55,34 +59,27 @@ if Input_model == "Data Load":
             video = VideoFileClip(path)
             video.audio.write_audiofile("output.mp3")
             src = "output.mp3"
-            # dst = "test.wav"
+            dst = "test.wav"
 
             sound = AudioSegment.from_mp3(src)
-            # sound.export(dst, format="wav")
-            # import torch
-            # DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-            # model = whisper.load_model("tiny.en").to(DEVICE)
-            # transcription = model.transcribe(dst, language="en")
-            # extracted_text = transcription['text']
-            # # if st.sidebar.button('Click To Chat'):
-            # complete_prompt = extracted_text + """ This marks the end of text provided,
-            #                 now you are best text explainer, use this above text to answer my below question :
-            #                 question is : """
+            sound.export(dst, format="wav")
+            import torch
+            DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+            model = whisper.load_model("tiny.en").to(DEVICE)
+            transcription = model.transcribe(dst, language="en")
+            extracted_text = transcription['text']
+            # if st.sidebar.button('Click To Chat'):
+            complete_prompt = extracted_text + """ This marks the end of text provided,
+                            now you are best text explainer, use this above text to answer my below question :
+                            question is : """
 
-            # f = open("myfile.txt", "w")
-            # f.write(complete_prompt)
-            # f.close()
+            f = open("myfile.txt", "w")
+            f.write(complete_prompt)
+            f.close()
             
 if Input_model == "Chat":
     f = open("myfile.txt", "r")
     f = f.read()
-    st.text(f)
-    f = open("myfile.txt", "w")
-    f.write("hello")
-    f.close()
-    f = open("myfile.txt", "r")
-    f = f.read()
-    st.text(f)
     if  len(list(f))!=0:
         complete_prompt = str(f)
         chat_function(complete_prompt)
